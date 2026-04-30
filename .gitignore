@@ -1,0 +1,31 @@
+# ====== SO ======
+.DS_Store
+Thumbs.db
+
+# ====== Editores / IDEs ======
+.idea/
+.vscode/
+*.iml
+*.swp
+
+# ====== Frontend (React) ======
+frontend/node_modules/
+frontend/build/
+frontend/.env
+frontend/.env.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+# ====== Backend (Spring Boot / Maven) ======
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/HELP.md
+backend/*.log
+
+# ====== Docker / Postgres ======
+postgres_data/
+
+# ====== Logs gerais ======
+*.log
+logs/
