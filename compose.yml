@@ -1,0 +1,58 @@
+# Orquestracao das 3 camadas do Garimpo Musical.
+#
+# Apenas o frontend expoe porta para o host (localhost:3000).
+# Backend e Postgres ficam isolados na rede interna do Docker.
+# Comunicacao via DNS interno: o backend acessa o banco em "postgres:5432"
+# e o nginx do front faz proxy_pass para "http://backend:8080".
+
+services:
+  frontend:
+    build: ./frontend
+    container_name: garimpo-frontend
+    ports:
+      - "3000:80"            # unica porta exposta -> http://localhost:3000
+    depends_on:
+      - backend
+    networks:
+      - garimpo-net
+
+  backend:
+    build: ./backend
+    container_name: garimpo-backend
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/garimpo-db
+      DB_USERNAME: postgres
+      DB_PASSWORD: password
+      # Evita que o spring-boot-docker-compose tente subir compose dentro do container
+      SPRING_DOCKER_COMPOSE_ENABLED: "false"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - garimpo-net
+    # Sem "ports:" -> nao acessivel de fora do Docker.
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: garimpo-postgres
+    environment:
+      POSTGRES_DB: garimpo-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # persistencia dos dados
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d garimpo-db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks:
+      - garimpo-net
+    # Sem "ports:" -> nao acessivel de fora do Docker.
+
+volumes:
+  postgres_data:
+
+networks:
+  garimpo-net:
+    driver: bridge

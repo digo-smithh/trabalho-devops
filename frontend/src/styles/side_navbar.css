@@ -1,0 +1,98 @@
+.sidebar {
+  display: none; /* fica sem por padrão, o @media que define quando aparecer */
+  position: fixed; /* fica fixo na tela para não gerar conflito com a main */
+  left: 0; /* fixa no limite da esquerda */
+  height: 100%; /* cobre a altura da pág inteira */
+  width: 256px; /* não tem perigo de colocar width max mesmo com a responsividade por causa do display */
+  background-color: #1A2235;
+  border-right: 1px solid #2A3446;
+  flex-direction: column;
+  z-index: 100; /* coloca ele como prioridade na profundidade da tela */
+}
+.sidebar-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid #2A3446;
+  display: flex;  /* alinha os itens da header (pretendemos colocar logo) */
+  align-items: center;
+  gap: 0.2rem;
+  height: 72px;
+}
+.sidebar-header h1 {
+  font-size: 1.25rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.sidebar-nav {
+  padding: 1rem;
+}
+
+/* Decoração da tab/aba */
+.sidebar-tab {
+  width: 100%; /* aba ocupa toda largura disponivel */
+  display: flex; /* alinha icone e texto */
+  align-items: center;
+  gap: 0.75rem; /* espaçamento entre icone e texto */
+  padding: 0.75rem 1rem; /* (padding) vertical horizontal */
+  border-radius: 0.5rem;
+  margin-bottom: 0.6rem; /* margem abaixo de cada aba */
+  border: none; /* remove qualquer borda default */
+  background-color: transparent;
+  color: #9CA3AF;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none; /* remove qualquer text-decoration default */
+}
+/* Muda a cor de fundo e do texto no hover */
+.sidebar-tab:hover {
+  background-color: #12182B;
+  color: #F0F0F0
+}
+/* Muda a cor de fundo e do texto quando tem a tag active */
+.sidebar-tab.active {
+  background-color: #FF4D4D;
+  color: #F0F0F0
+}
+.sidebar-tab .img {
+  width: 20px;
+  height: 20px;
+}
+
+
+/* Efeito de colapsar */
+.sidebar {
+  transition: width 0.3s ease;
+}
+body {
+  transition: padding-left 0.3s ease; /* ajusta o padding do body principal com a mesma transição */
+}
+.sidebar.collapsed {
+  width: 88px; /* nova largura da sidebar recolhida */
+}
+.sidebar.collapsed .sidebar-header {
+  justify-content: center;
+}
+.sidebar.collapsed .sidebar-title {
+  display: none; /* esconde o título */
+}
+.sidebar.collapsed .sidebar-tab span {
+  display: none; /* esconde o texto dos ícones */
+}
+.sidebar.collapsed .sidebar-tab {
+  justify-content: center; /* centraliza o ícone quando o texto some */
+}
+.sidebar-tab .icon,
+.sidebar-tab img {
+  flex-shrink: 0;
+}
+
+/* configurações globais para a responsividade */
+@media (min-width: 768px) {
+  .sidebar {
+    display: flex; /* se o width da pág for no mínimo 768, o display é sobreescrito e a sidebar aparece */
+  }
+
+  body.sidebar-collapsed {
+    padding-left: 88px; /* mesma largura da sidebar recolhida */
+  }
+}

@@ -1,0 +1,232 @@
+/* decorações do home-header */
+.home-header {
+  display: flex; /* alinha os itens internos em uma linha */
+  justify-content: space-between;
+  align-items: center; /* centralizar os itens */
+  margin-bottom: 1rem;
+}
+.home-header h1 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+.home-header p {
+  font-size: 1rem;
+}
+
+
+/* decorações do challenge-home-card */
+.challenge-home-card {
+  background: linear-gradient(to bottom right, #FF4D4D, #9D85F2); /* efeito de degrade vermelho para roxo */
+  border-radius: 0.75rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  cursor: pointer;
+  color: white;
+  margin-bottom: 2rem;
+  transition: transform 0.2s; /* deixa as transições de efeito mais suaves, colocado por causa do efeito no hover */
+ max-width: 800px;
+}
+.challenge-home-card-header {
+  display: flex; /* alinha icone e titulo */
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+.challenge-home-card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+.challenge-home-card p {
+  font-size: 0.8rem;
+  margin-bottom: 0.5rem;
+}
+.challenge-home-card:hover {
+  transform: scale(1.02); /* efeito de zoom no card quando passar o mouse */
+}
+
+/* barra de progresso do card de desafio*/
+.challenge-home-card-progress-bar {
+  display: flex; /* alinha a barra e o texto + necessário para os filhos serem flex*/
+  align-items: center;
+  gap: 0.5rem; /* espaçamento entre barra e o texto */
+}
+
+.challenge-home-card-progress-bar-bg {
+  flex-grow: 1; /* pega 100% (ou double 1) do espaço disponível da div pai, já tirando o espaço do texto! "width: 100%" não funciona pq nn conta o texto/outros elementos */
+  background-color: rgba(255, 255, 255, 0.2); /* a cor é branca (255, 255, 255) e 0.2 representa a opacidade, deixamos quase tranparente para combinar com a cor de fundo que não é constante */
+  border-radius: 999px; /* borda bem redonda & igual ao componente da frente */
+  height: 0.5rem; /* tamanho fixo */
+}
+
+.challenge-home-card-progress-bar-fg { /* barra branca que indica o progresso, o quanto de progresso é definido na tag html */
+  background-color: white;
+  height: 100%; /* como ele está dentro da div de fundo e ela controla a altura, pode se esticar o max possivel para ficar igual a ela */
+  border-radius: 999px; /* borda bem redonda & igual a div de fundo */
+}
+
+.challenge-home-card-progress-bar-text { /* texto do lado da barra de progresso */
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+
+/* decorações do carousel-header */
+.carousel-header {
+  display: flex; /* alinha o título e o link (ver todos) */
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.carousel-header h2 {
+  font-size: 1rem;
+}
+.carousel-header a {
+  font-size: 0.75rem;
+}
+
+
+/* decorações do carousel-body */
+.carousel-body {
+  display: flex; /* alinha os cards */
+  gap: 1rem; /* espaço entre os cards */
+  overflow-x: auto; /* rolagem horizontal dos cards (se overflox) */
+  padding-bottom: 1rem;
+  -ms-overflow-style: none; /* esconde a barra do scroll */
+  scrollbar-width: none; /* esconde a barra do scroll */
+}
+.carousel-body::-webkit-scrollbar {
+  display: none; /* esconde a barra do scroll */
+}
+
+
+/* decorações do home card */
+.home-card {
+  flex-shrink: 0; /* cards não vão variar de tamanho independente da tela */
+  width: 140px;
+  cursor: pointer;
+}
+.home-card-image {
+  position: relative;
+  overflow: hidden; /* esconde se cortar pela responsividade */
+  border-radius: 0.75rem;
+  margin-bottom: 0.75rem;
+  aspect-ratio: 1 / 1; /* div quadrado */
+}
+.home-card-image-tag {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* imagem cobre o espaço inteiro */
+  transition: transform 0.3s ease; /* deixa as transições de efeito mais suaves, colocado por causa do efeito no hover */
+}
+.home-card h4 {
+  font-weight: 600;
+  white-space: nowrap; /* texto não quebra linha */
+  overflow: hidden; /* esconde se cortar pela responsividade */
+  text-overflow: ellipsis;
+  font-size: 0.8rem;
+}
+.home-card p {
+  font-size: 0.65rem;
+  white-space: nowrap; /* texto não quebra linha */
+  overflow: hidden; /* esconde se cortar pela responsividade */
+  text-overflow: ellipsis;
+}
+.home-card:hover .home-card-image-tag {
+  transform: scale(1.1); /* efeito de zoom na imagem quando passar o mouse */
+}
+
+.home-card a { /* tira a decoração do a em home-card definida no common */
+  text-decoration: none;
+  color: inherit; /* herda do pai */
+  font-weight: inherit; /* herda do pai */
+  display: block;
+}
+
+.challenge-home-card a { /* tira a decoração do a em challenge-home-card definida no common */
+  text-decoration: none;
+  color: inherit; /* herda do pai */
+  font-weight: inherit; /* herda do pai */
+  display: block;
+}
+
+/* configurações globais para a responsividade */
+@media (min-width: 768px) {
+  .bottom-navbar {
+    display: none;
+  }
+
+  .carousel-header h2 {
+    font-size: 1.25rem;
+  }
+  .carousel-header a {
+    font-size: 1rem;
+  }
+
+  .home-header {
+    margin-bottom: 2rem;
+  }
+  .home-header h1 {
+    font-size: 1.75rem;
+    margin-bottom: 0.25rem;
+  }
+  .home-header p {
+    font-size: 1.25rem;
+  }
+
+  .challenge-home-card {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+  .challenge-home-card h3 {
+    font-size: 1.25rem;
+    /*margin-bottom: 0.5rem;*/
+  }
+  .challenge-home-card p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+  .home-card {
+    width: 160px;
+  }
+  .home-card h4 {
+    font-size: 1rem;
+  }
+  .home-card p {
+    font-size: 0.8rem;
+  }
+}
+
+/* Estilo do Carregamento */
+.main-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    color: #9CA3AF; 
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3); 
+    border-top: 4px solid #FF4D4D; 
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite; 
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
