@@ -11,9 +11,9 @@ const ArtistProfile = ({ artistId }) => {
       try {
         setLoading(true);
         const response = await fetch(`/api/home/artists/${artistId}`);
-        
+
         if (!response.ok) throw new Error('Erro ao carregar artista');
-        
+
         const data = await response.json();
         setArtist(data);
       } catch (error) {
@@ -44,9 +44,9 @@ const ArtistProfile = ({ artistId }) => {
   };
 
   const renderSongItem = (song, index) => (
-    <div 
-      className="song-item" 
-      key={song.id} 
+    <div
+      className="song-item"
+      key={song.id}
       onClick={() => handleSongClick(song.spotifyUrl)}
       style={{ cursor: 'pointer' }}
     >
@@ -80,7 +80,7 @@ const ArtistProfile = ({ artistId }) => {
           <div className="profile-info">
             <p className="subtitle">{artist.genre} • {artist.city}, {artist.state}</p>
             <h1>{artist.name}</h1>
-            
+
             <div className="profile-stats">
                 <span><strong>{artist.songs.length}</strong> músicas</span>
             </div>
@@ -128,7 +128,7 @@ const ArtistProfile = ({ artistId }) => {
           </div>
         )}
       </div>
-      
+
       <br/><br/><br/>
     </>
   );

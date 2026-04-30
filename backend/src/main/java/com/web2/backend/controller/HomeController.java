@@ -1,6 +1,5 @@
 package com.web2.backend.controller;
 
-
 import com.web2.backend.model.Album;
 import com.web2.backend.model.Artist;
 import com.web2.backend.repository.AlbumRepository;
@@ -24,13 +23,11 @@ public class HomeController {
     @Autowired
     private ArtistRepository artistRepository;
 
-    // URL: http://localhost:8080/api/home/albums
     @GetMapping("/albums")
     public List<Album> getNewReleases() {
         return albumRepository.findAll();
     }
 
-    // URL: http://localhost:8080/api/home/artists?city=SP&state=SP
     @GetMapping("/artists")
     public List<Artist> getArtists(
             @RequestParam(required = false) String city,
@@ -47,7 +44,6 @@ public class HomeController {
         return artistRepository.findAll();
     }
 
-    // Ex: GET /api/home/artists/1
     @GetMapping("/artists/{id}")
     public ResponseEntity<Artist> getArtistById(@PathVariable Long id) {
         Optional<Artist> artist = artistRepository.findById(id);

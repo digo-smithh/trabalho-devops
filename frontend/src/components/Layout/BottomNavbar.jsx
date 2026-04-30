@@ -12,14 +12,14 @@ const ChallengesIcon = () => (
 const BottomNavbar = ({ activePage, onNavigate }) => {
   return (
     <nav className="bottom-navbar">
-      <a 
+      <a
         href="#"
         onClick={() => onNavigate('home')}
         className={`bottom-navbar-tab ${activePage === 'home' ? 'active' : ''}`}
       >
         <HomeIcon />
       </a>
-      <a 
+      <a
         href="#"
         onClick={() => onNavigate('challenges')}
         className={`bottom-navbar-tab ${activePage === 'challenges' ? 'active' : ''}`}

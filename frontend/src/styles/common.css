@@ -1,16 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Inter:wght@400;500;600&display=swap');
 
-/* Cores
-   - background escuro: #12182B
-   - background claro: #1A2235
-   - texto principal (branco): #F0F0F0
-   - texto secundario (cinza): #9CA3AF
-   - cor de destaque principal (vermelho): #FE4D4C
-   - cor de destaque secundaria (roxo): #A586F7
-   - cor das bordas #2A3446
-*/
-
-/* decorações gerais */
 * {
   margin: 0;
   padding: 0;
@@ -44,9 +33,8 @@ a {
   padding: 1.5rem 1rem;
 }
 
-/* configurações globais para a responsividade */
 @media (min-width: 768px) {
   body {
-    padding-left: 256px; /* largura do sidebar */
+    padding-left: 256px; 
   }
 }

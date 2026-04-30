@@ -3,20 +3,20 @@ import Sidebar from './components/Layout/Sidebar';
 import BottomNavbar from './components/Layout/BottomNavbar';
 import Home from './components/Pages/Home';
 import Challenges from './components/Pages/Challenges';
-import ArtistProfile from './components/Pages/ArtistProfile'; 
+import ArtistProfile from './components/Pages/ArtistProfile';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
-  
+
   const [selectedArtistId, setSelectedArtistId] = useState(null);
 
   const handleNavigate = (page, dataId = null) => {
     setCurrentPage(page);
-    
+
     if (dataId) {
       setSelectedArtistId(dataId);
     }
-    
+
     window.scrollTo(0, 0);
   };
 
@@ -35,19 +35,19 @@ function App() {
 
   return (
     <>
-    
-      <Sidebar 
-        activePage={currentPage} 
-        onNavigate={(page) => handleNavigate(page)} 
+
+      <Sidebar
+        activePage={currentPage}
+        onNavigate={(page) => handleNavigate(page)}
       />
 
-      <main className="main"> 
+      <main className="main">
         {renderPage()}
       </main>
-      
-      <BottomNavbar 
-        activePage={currentPage} 
-        onNavigate={(page) => handleNavigate(page)} 
+
+      <BottomNavbar
+        activePage={currentPage}
+        onNavigate={(page) => handleNavigate(page)}
       />
     </>
   );

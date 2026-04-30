@@ -2,24 +2,24 @@ import React, { useState } from 'react';
 import '../../styles/challenges.css';
 
 const Challenges = () => {
-  const [activeTab, setActiveTab] = useState('my-challenges'); 
+  const [activeTab, setActiveTab] = useState('my-challenges');
 
   const challengesData = [
-    { 
-      id: 1, 
-      iconSrc: "/assets/headphone.svg", 
-      title: "Explorador Musical", 
-      description: "Ouça 10 artistas novos esta semana", 
-      progress: 60, 
+    {
+      id: 1,
+      iconSrc: "/assets/headphone.svg",
+      title: "Explorador Musical",
+      description: "Ouça 10 artistas novos esta semana",
+      progress: 60,
       reward: "+100 Pontos",
       type: 'my-challenges'
     },
-    { 
-      id: 2, 
-      iconSrc: "/assets/music.svg", 
-      title: "Maratonista do Rock", 
-      description: "Ouça 5 músicas de Rock Nacional", 
-      progress: 80, 
+    {
+      id: 2,
+      iconSrc: "/assets/music.svg",
+      title: "Maratonista do Rock",
+      description: "Ouça 5 músicas de Rock Nacional",
+      progress: 80,
       reward: "+50 Pontos",
       type: 'my-challenges'
     },
@@ -39,8 +39,8 @@ const Challenges = () => {
             <span>{challenge.progress}%</span>
           </div>
           <div className="challenge-card-progress-bar-bg">
-            <div 
-              className="challenge-card-progress-bar-fg" 
+            <div
+              className="challenge-card-progress-bar-fg"
               style={{ width: `${challenge.progress}%` }}
             ></div>
           </div>
@@ -78,14 +78,14 @@ const Challenges = () => {
       </div>
 
       <div className="tab-bar">
-        <button 
+        <button
           className={`tab-button ${activeTab === 'my-challenges' ? 'active' : ''}`}
           onClick={() => setActiveTab('my-challenges')}
           data-tab="my-challenges"
         >
           Meus Desafios
         </button>
-        <button 
+        <button
           className={`tab-button ${activeTab === 'group-challenges' ? 'active' : ''}`}
           onClick={() => setActiveTab('group-challenges')}
           data-tab="group-challenges"
@@ -94,8 +94,8 @@ const Challenges = () => {
         </button>
       </div>
 
-      <div 
-        id="my-challenges" 
+      <div
+        id="my-challenges"
         className={`tab-content ${activeTab === 'my-challenges' ? 'active' : ''}`}
       >
         <div className="challenges-list">
@@ -105,8 +105,8 @@ const Challenges = () => {
         </div>
       </div>
 
-      <div 
-        id="group-challenges" 
+      <div
+        id="group-challenges"
         className={`tab-content ${activeTab === 'group-challenges' ? 'active' : ''}`}
       >
         <div className="challenges-list">

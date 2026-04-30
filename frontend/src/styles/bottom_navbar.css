@@ -1,30 +1,30 @@
 .bottom-navbar {
-  position: fixed; /* fica fixo na tela para não gerar conflito com a main */
-  /* fixa ele no extremo bottom, left e right: */
+  position: fixed; 
+  
   bottom: 0;
   left: 0;
   right: 0;
   background-color: #1A2235;
   border-top: 1px #2A3446;
   height: 4rem;
-  display: flex; /* aparece por default, mas o @media que controla se aparece ou nn */
-  justify-content: space-around; /* os itens ficam espaçamos igualmente */
+  display: flex; 
+  justify-content: space-around; 
   align-items: center;
-  z-index: 100; /* coloca ele como prioridade na profundidade da tela */
+  z-index: 100; 
 }
 .bottom-navbar-tab {
   flex-direction: column;
   align-items: center;
-  gap: 0.25rem; /* espaçamento entre icone e titulo */
-  padding: 0.5rem 1rem; /* (padding) vertical horizontal */
+  gap: 0.25rem; 
+  padding: 0.5rem 1rem; 
   color: #9CA3AF;
   border: none;
   background: none;
   font-size: 0.75rem;
   cursor: pointer;
-  text-decoration: none; /* remove qualquer text-decoration default */
+  text-decoration: none; 
 }
-.bottom-navbar-tab.active { /* icone e titulo vermelhos quando ativo */
+.bottom-navbar-tab.active { 
   color: #FF4D4D
 }
 .bottom-navbar-tab .icon {
@@ -32,9 +32,8 @@
   height: 32px;
 }
 
-/* configurações globais para a responsividade */
 @media (min-width: 768px) {
   .bottom-navbar {
-    display: none; /* se o width da pág for no mínimo 768, o display é sobreescrito e a sidebar some */
+    display: none; 
   }
 }
