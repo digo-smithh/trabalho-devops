@@ -72,11 +72,25 @@ pratica-devops-garimpo-musical/
 Apenas Docker Desktop (ou Docker Engine + Compose v2). Não é preciso ter
 Node, Java, Maven nem Postgres na máquina.
 
+## Configuração (variáveis de ambiente)
+
+As credenciais do banco e a porta exposta do frontend são lidas de um
+arquivo `.env` na raiz do projeto. O repositório traz um `.env.example` com
+os valores padrão; basta copiá-lo:
+
+```
+cp .env.example .env
+```
+
+O `.env` está no `.gitignore` e não é versionado — só o `.env.example`,
+que serve de referência.
+
 ## Como rodar
 
 ```
 git clone https://github.com/digo-smithh/pratica-devops-garimpo-musical.git
 cd pratica-devops-garimpo-musical
+cp .env.example .env
 docker compose up --build
 ```
 
@@ -87,6 +101,27 @@ BackendJavaApplication`), abra `http://localhost:3000`.
 
 Para parar, `docker compose down`. Para parar e apagar o volume com os dados
 do banco, `docker compose down -v`.
+
+## Acesso ao banco
+
+O Postgres não é exposto no host (só vive na rede `garimpo-net`), então
+não dá para conectar com `localhost:5432`. Para inspecionar o banco, use
+`docker exec` direto no contêiner:
+
+```
+docker exec -it garimpo-postgres psql -U postgres -d garimpo-db
+```
+
+Credenciais padrão (definidas no `.env`):
+
+- host (interno do compose): `postgres`
+- porta: `5432`
+- database: `garimpo-db`
+- usuário: `postgres`
+- senha: `password`
+
+A aplicação em si não tem tela de login: o site é público e lê dados
+abertos sobre artistas e álbuns.
 
 ## Verificando que está funcionando
 
