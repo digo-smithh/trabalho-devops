@@ -96,8 +96,11 @@
 }
 
 .home-card {
-  flex-shrink: 0; 
+  flex-shrink: 0;
   width: 140px;
+}
+
+.home-card-clickable {
   cursor: pointer;
 }
 .home-card-image {
@@ -126,8 +129,8 @@
   overflow: hidden; 
   text-overflow: ellipsis;
 }
-.home-card:hover .home-card-image-tag {
-  transform: scale(1.1); 
+.home-card-clickable:hover .home-card-image-tag {
+  transform: scale(1.1);
 }
 
 .home-card a { 

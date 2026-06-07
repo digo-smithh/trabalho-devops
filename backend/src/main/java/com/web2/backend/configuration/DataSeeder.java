@@ -3,11 +3,16 @@ package com.web2.backend.configuration;
 import com.web2.backend.model.Album;
 import com.web2.backend.model.Artist;
 import com.web2.backend.model.Song;
+import com.web2.backend.model.User;
 import com.web2.backend.repository.AlbumRepository;
 import com.web2.backend.repository.ArtistRepository;
+import com.web2.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
@@ -18,10 +23,30 @@ public class DataSeeder implements CommandLineRunner {
     @Autowired
     private ArtistRepository artistRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public void run(String... args) throws Exception {
         seedAlbums();
         seedArtistsAndSongs();
+        seedDemoUser();
+    }
+
+    private void seedDemoUser() {
+        String email = "demo@garimpo.test";
+        if (userRepository.existsByEmailIgnoreCase(email)) return;
+
+        User demo = new User();
+        demo.setName("Demo");
+        demo.setEmail(email);
+        demo.setPasswordHash(passwordEncoder.encode("demo123"));
+        demo.setAvatarKey("violet");
+        demo.setCreatedAt(Instant.now());
+        userRepository.save(demo);
     }
 
     private void seedAlbums() {
@@ -37,7 +62,7 @@ public class DataSeeder implements CommandLineRunner {
 
         Artist taylor = new Artist();
         taylor.setName("Taylor Swift");
-        taylor.setGenre("Pop Alternativo");
+        taylor.setGenre("Pop");
         taylor.setCity("West Reading");
         taylor.setState("PA");
         taylor.setImageUrl("https://i.imgur.com/fXymOor.jpeg");
@@ -51,8 +76,8 @@ public class DataSeeder implements CommandLineRunner {
 
         Artist gaga = new Artist();
         gaga.setName("Lady Gaga");
-        gaga.setGenre("Eletrônica");
-        gaga.setCity("Nova Iorque");
+        gaga.setGenre("Pop");
+        gaga.setCity("New York");
         gaga.setState("NY");
         gaga.setImageUrl("https://i.imgur.com/cbTBM6m.jpeg");
         gaga.setSpotifyId("1HY2Jd0NmPuamShAr6KMms");

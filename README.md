@@ -8,7 +8,8 @@ Docker, entregue como trabalho da disciplina de DevOps.
 O Garimpo Musical é uma plataforma para descobrir artistas independentes:
 mostra os lançamentos atuais, sugere artistas a partir da localização do
 usuário e tem perfil próprio para cada artista, com músicas e link para o
-Spotify.
+Spotify. O acesso é protegido por uma tela de login, com cadastro próprio e
+escolha de avatar.
 
 O foco do trabalho não é a aplicação em si, e sim empacotá-la em contêineres,
 isolando frontend, backend e banco em camadas independentes que sobem com um
@@ -120,8 +121,72 @@ Credenciais padrão (definidas no `.env`):
 - usuário: `postgres`
 - senha: `password`
 
-A aplicação em si não tem tela de login: o site é público e lê dados
-abertos sobre artistas e álbuns.
+## Login da aplicação
+
+Ao abrir `http://localhost:3000` o site cai numa tela de login. Há duas
+opções para entrar:
+
+**Usar a conta de demonstração** (criada automaticamente pelo seed):
+
+- email: `demo@garimpo.test`
+- senha: `demo123`
+
+**Criar uma conta nova** pelo botão "Criar conta", informando nome, email,
+senha (com indicador de força) e escolhendo um dos seis avatares disponíveis.
+
+A autenticação é baseada em sessão guardada no banco: o `POST /api/auth/login`
+gera um token UUID, persistido na tabela `session` com expiração de 7 dias,
+e retornado para o frontend, que o armazena em `localStorage`. Cada chamada
+subsequente envia `Authorization: Bearer <token>`. Ao clicar em "Sair", o
+backend apaga a linha da `session`.
+
+As senhas são guardadas com **BCrypt** na coluna `password_hash` da tabela
+`app_user`.
+
+## Endpoints da API
+
+Todas as chamadas passam pelo Nginx do frontend (`/api/...`). Não há acesso
+direto ao backend a partir do host.
+
+Públicos (sem token):
+
+- `GET /api/home/albums` — lista os álbuns em destaque.
+- `GET /api/home/artists?city=&state=` — lista artistas, com filtro opcional por cidade e estado.
+- `GET /api/home/artists/{id}` — detalhes de um artista, com as músicas.
+
+Autenticação (escrevem no banco):
+
+- `POST /api/auth/register` — cria um `app_user` e já abre uma `session`.
+- `POST /api/auth/login` — verifica a senha (BCrypt) e abre uma nova `session`.
+- `POST /api/auth/logout` — apaga a `session` correspondente ao token enviado.
+- `GET /api/auth/me` — retorna o usuário do token (sem gravar nada).
+
+Os endpoints autenticados esperam o header `Authorization: Bearer <token>`,
+onde `<token>` é o UUID retornado por `/login` ou `/register`.
+
+## Persistência no banco
+
+A aplicação não é só leitura — três operações escrevem no Postgres em tempo
+real, em duas tabelas criadas pelo Hibernate no startup:
+
+- `app_user` — uma linha por usuário cadastrado (nome, email, hash BCrypt da
+  senha, avatar e data de criação).
+- `session` — uma linha por login ativo (token UUID, FK para o usuário,
+  data de criação e expiração).
+
+O mapeamento de cada endpoint para o efeito no banco:
+
+- `POST /auth/register` faz `INSERT` em `app_user` e `INSERT` em `session`.
+- `POST /auth/login` faz `INSERT` em `session`.
+- `POST /auth/logout` faz `DELETE` em `session`.
+
+Os dados sobrevivem entre execuções porque o `compose.yml` declara um volume
+nomeado para o diretório de dados do Postgres:
+
+```yaml
+volumes:
+  - postgres_data:/var/lib/postgresql/data
+```
 
 ## Verificando que está funcionando
 

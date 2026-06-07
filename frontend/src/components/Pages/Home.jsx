@@ -137,18 +137,19 @@ const Home = ( {onNavigate}) => {
     );
   }
 
-  const HomeCard = ({ item }) => {
+  const HomeCard = ({ item, onClick }) => {
+    const isClickable = typeof onClick === 'function';
 
     const handleClick = (e) => {
+      if (!isClickable) return;
       e.preventDefault();
-      onNavigate('artist', item.id);
+      onClick(item.id);
     };
 
     return (
       <div
-        className="home-card"
-        onClick={handleClick}
-        style={{ cursor: 'pointer' }}
+        className={`home-card${isClickable ? ' home-card-clickable' : ''}`}
+        onClick={isClickable ? handleClick : undefined}
       >
         <div className="home-card-image">
           <img
@@ -198,23 +199,27 @@ const Home = ( {onNavigate}) => {
 
       <section>
         <div className="carousel-header">
-          <h2>Lançamentos atuais</h2>
+          <h2>Artistas que combinam com você {city ? `em ${city}` : ""}</h2>
           <a href="#">Ver todos</a>
         </div>
         <div className="carousel-body">
-          {releases.map((item) => (
-            <HomeCard item={item} key={item.id} />
+          {suggestedArtists.map((item) => (
+            <HomeCard
+              item={item}
+              key={item.id}
+              onClick={(id) => onNavigate('artist', id)}
+            />
           ))}
         </div>
       </section>
 
       <section>
         <div className="carousel-header">
-          <h2>Artistas que combinam com você {city ? `em ${city}` : ""}</h2>
+          <h2>Lançamentos atuais</h2>
           <a href="#">Ver todos</a>
         </div>
         <div className="carousel-body">
-          {suggestedArtists.map((item) => (
+          {releases.map((item) => (
             <HomeCard item={item} key={item.id} />
           ))}
         </div>

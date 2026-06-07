@@ -1,7 +1,11 @@
 import React from 'react';
+import { useAuth } from '../../auth/AuthContext';
+import { Avatar } from '../Avatar';
 import '../../styles/side_navbar.css';
 
 const Sidebar = ({ activePage, onNavigate }) => {
+  const { user, logout } = useAuth();
+
   return (
     <aside className="sidebar" id="sidebar">
       <div className="sidebar-header">
@@ -26,6 +30,30 @@ const Sidebar = ({ activePage, onNavigate }) => {
           <span>Desafios</span>
         </a>
       </nav>
+
+      {user && (
+        <div className="sidebar-profile">
+          <div className="sidebar-profile-info">
+            <Avatar avatarKey={user.avatarKey} size={40} ring />
+            <div className="sidebar-profile-text">
+              <span className="sidebar-profile-name">{user.name}</span>
+              <span className="sidebar-profile-email">{user.email}</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="sidebar-logout"
+            onClick={logout}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+              <polyline points="16 17 21 12 16 7"/>
+              <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            Sair
+          </button>
+        </div>
+      )}
     </aside>
   );
 };
