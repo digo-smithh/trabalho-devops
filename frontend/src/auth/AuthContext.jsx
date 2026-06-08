@@ -5,19 +5,31 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [followingIds, setFollowingIds] = useState(new Set());
   const [loading, setLoading] = useState(true);
+
+  const loadFollowingIds = useCallback(async () => {
+    try {
+      const ids = await api('/me/following/ids');
+      setFollowingIds(new Set(ids));
+    } catch (err) {
+      setFollowingIds(new Set());
+    }
+  }, []);
 
   const refreshMe = useCallback(async () => {
     try {
       const me = await api('/auth/me');
       setUser(me);
+      await loadFollowingIds();
       return me;
     } catch (err) {
       setUser(null);
+      setFollowingIds(new Set());
       tokenStorage.clear();
       return null;
     }
-  }, []);
+  }, [loadFollowingIds]);
 
   useEffect(() => {
     let mounted = true;
@@ -28,7 +40,10 @@ export const AuthProvider = ({ children }) => {
       }
       if (mounted) setLoading(false);
     })();
-    const off = onUnauthorized(() => setUser(null));
+    const off = onUnauthorized(() => {
+      setUser(null);
+      setFollowingIds(new Set());
+    });
     return () => { mounted = false; off(); };
   }, [refreshMe]);
 
@@ -36,6 +51,7 @@ export const AuthProvider = ({ children }) => {
     const res = await api('/auth/login', { method: 'POST', body: { email, password }, auth: false });
     tokenStorage.set(res.token);
     setUser(res.user);
+    await loadFollowingIds();
     return res.user;
   };
 
@@ -47,6 +63,7 @@ export const AuthProvider = ({ children }) => {
     });
     tokenStorage.set(res.token);
     setUser(res.user);
+    setFollowingIds(new Set());
     return res.user;
   };
 
@@ -54,9 +71,49 @@ export const AuthProvider = ({ children }) => {
     try { await api('/auth/logout', { method: 'POST' }); } catch {}
     tokenStorage.clear();
     setUser(null);
+    setFollowingIds(new Set());
   };
 
-  const value = { user, loading, login, register, logout, refreshMe };
+  const follow = async (artistId) => {
+    setFollowingIds(prev => {
+      const next = new Set(prev);
+      next.add(artistId);
+      return next;
+    });
+    try {
+      await api(`/me/following/${artistId}`, { method: 'POST' });
+    } catch (err) {
+      setFollowingIds(prev => {
+        const next = new Set(prev);
+        next.delete(artistId);
+        return next;
+      });
+      throw err;
+    }
+  };
+
+  const unfollow = async (artistId) => {
+    setFollowingIds(prev => {
+      const next = new Set(prev);
+      next.delete(artistId);
+      return next;
+    });
+    try {
+      await api(`/me/following/${artistId}`, { method: 'DELETE' });
+    } catch (err) {
+      setFollowingIds(prev => {
+        const next = new Set(prev);
+        next.add(artistId);
+        return next;
+      });
+      throw err;
+    }
+  };
+
+  const value = {
+    user, loading, login, register, logout, refreshMe,
+    followingIds, follow, unfollow,
+  };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 

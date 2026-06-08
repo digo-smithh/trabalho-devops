@@ -1,10 +1,28 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../../auth/AuthContext';
 import '../../styles/artist_profile.css';
 
 const ArtistProfile = ({ artistId }) => {
+  const { followingIds, follow, unfollow } = useAuth();
   const [artist, setArtist] = useState(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('songs');
+  const [followBusy, setFollowBusy] = useState(false);
+
+  const isFollowing = artist ? followingIds.has(artist.id) : false;
+
+  const handleFollowClick = async () => {
+    if (!artist || followBusy) return;
+    setFollowBusy(true);
+    try {
+      if (isFollowing) await unfollow(artist.id);
+      else await follow(artist.id);
+    } catch (err) {
+      console.error('Erro ao atualizar follow:', err);
+    } finally {
+      setFollowBusy(false);
+    }
+  };
 
   useEffect(() => {
     const fetchArtistData = async () => {
@@ -86,7 +104,13 @@ const ArtistProfile = ({ artistId }) => {
             </div>
 
             <div className="profile-actions">
-              <button className="btn btn-seguir">Seguir</button>
+              <button
+                className={`btn ${isFollowing ? 'btn-seguindo' : 'btn-seguir'}`}
+                onClick={handleFollowClick}
+                disabled={followBusy}
+              >
+                {isFollowing ? 'Deixar de seguir' : 'Seguir'}
+              </button>
               <button className="btn btn-spotify" onClick={handleSpotifyView}>
                 Ver no Spotify
               </button>

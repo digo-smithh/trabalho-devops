@@ -154,6 +154,22 @@
     transform: scale(1.02); 
 }
 
+.btn-seguindo {
+    background-color: transparent;
+    border: 2px solid #FF4D4D;
+    color: #FF4D4D;
+}
+
+.btn-seguindo:hover {
+    transform: scale(1.02);
+}
+
+.profile-actions .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
 .btn-spotify {
     background-color: transparent;
     border: 2px solid #FF4D4D;

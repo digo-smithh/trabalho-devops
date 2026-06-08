@@ -9,11 +9,28 @@ O Garimpo Musical é uma plataforma para descobrir artistas independentes:
 mostra os lançamentos atuais, sugere artistas a partir da localização do
 usuário e tem perfil próprio para cada artista, com músicas e link para o
 Spotify. O acesso é protegido por uma tela de login, com cadastro próprio e
-escolha de avatar.
+escolha de avatar. Cada usuário pode seguir artistas e ver depois sua lista
+em uma aba "Seguindo".
 
 O foco do trabalho não é a aplicação em si, e sim empacotá-la em contêineres,
 isolando frontend, backend e banco em camadas independentes que sobem com um
 único comando.
+
+## O que mudou desde a primeira entrega
+
+A primeira versão era só leitura: a home listava álbuns e artistas vindos do
+banco e o perfil do artista mostrava as músicas. Para esta segunda entrega o
+projeto ganhou duas funcionalidades novas, ambas com gravação no banco:
+
+- **Autenticação completa**: tela de login com cadastro próprio (nome, email,
+  senha com indicador de força e escolha de avatar), sessão guardada no
+  Postgres em vez de JWT, senhas com BCrypt e logout que apaga a sessão.
+- **Seguir artistas**: o botão "Seguir" no perfil do artista virou
+  funcional (alterna para "Deixar de seguir" quando já segue) e foi adicionada 
+  uma nova aba "Seguindo" no menu lateral, listando os artistas seguidos.
+
+Junto disso, as credenciais do banco e a porta do frontend foram 
+movidas para um `.env` (com `.env.example` versionado).
 
 ## Tecnologias
 
@@ -51,22 +68,6 @@ usar URLs relativas no React, sem variável de ambiente.
 A ordem de inicialização também está garantida: o Postgres tem um
 `healthcheck` com `pg_isready`, e o backend só sobe depois que o healthcheck
 passa.
-
-## Estrutura
-
-```
-pratica-devops-garimpo-musical/
-├── compose.yml          orquestração das 3 camadas
-├── README.md
-├── frontend/            React + Nginx
-│   ├── Dockerfile       multi-stage: node (build) → nginx (runtime)
-│   ├── default.conf     configuração do Nginx (proxy /api → backend)
-│   └── src/...
-└── backend/             Spring Boot
-    ├── Dockerfile       multi-stage: maven (build) → JDK (runtime)
-    ├── pom.xml
-    └── src/...
-```
 
 ## Pré-requisitos
 
@@ -161,24 +162,36 @@ Autenticação (escrevem no banco):
 - `POST /api/auth/logout` — apaga a `session` correspondente ao token enviado.
 - `GET /api/auth/me` — retorna o usuário do token (sem gravar nada).
 
+Seguindo artistas (também autenticados, escrevem no banco):
+
+- `GET /api/me/following` — lista os artistas que o usuário segue.
+- `GET /api/me/following/ids` — só os IDs, usado pelo frontend para marcar o botão "Seguir/Deixar de seguir".
+- `POST /api/me/following/{artistId}` — começa a seguir um artista (retorna `201` se for novo, `204` se já seguia, `404` se o artista não existe).
+- `DELETE /api/me/following/{artistId}` — para de seguir (idempotente, sempre `204`).
+
 Os endpoints autenticados esperam o header `Authorization: Bearer <token>`,
 onde `<token>` é o UUID retornado por `/login` ou `/register`.
 
 ## Persistência no banco
 
-A aplicação não é só leitura — três operações escrevem no Postgres em tempo
-real, em duas tabelas criadas pelo Hibernate no startup:
+A aplicação não é só leitura — várias operações escrevem no Postgres em tempo
+real, em três tabelas criadas pelo Hibernate no startup:
 
 - `app_user` — uma linha por usuário cadastrado (nome, email, hash BCrypt da
   senha, avatar e data de criação).
 - `session` — uma linha por login ativo (token UUID, FK para o usuário,
   data de criação e expiração).
+- `follow` — uma linha por par (usuário, artista) seguido, com FKs para
+  `app_user` e `artist` e UNIQUE em `(user_id, artist_id)` para evitar
+  duplicatas.
 
 O mapeamento de cada endpoint para o efeito no banco:
 
 - `POST /auth/register` faz `INSERT` em `app_user` e `INSERT` em `session`.
 - `POST /auth/login` faz `INSERT` em `session`.
 - `POST /auth/logout` faz `DELETE` em `session`.
+- `POST /me/following/{id}` faz `INSERT` em `follow` (ignora se já existe).
+- `DELETE /me/following/{id}` faz `DELETE` em `follow`.
 
 Os dados sobrevivem entre execuções porque o `compose.yml` declara um volume
 nomeado para o diretório de dados do Postgres:

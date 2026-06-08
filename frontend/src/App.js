@@ -4,6 +4,7 @@ import BottomNavbar from './components/Layout/BottomNavbar';
 import Home from './components/Pages/Home';
 import Challenges from './components/Pages/Challenges';
 import ArtistProfile from './components/Pages/ArtistProfile';
+import Following from './components/Pages/Following';
 import AuthScreen from './components/Pages/AuthScreen';
 import { useAuth } from './auth/AuthContext';
 
@@ -37,6 +38,8 @@ function App() {
         return <Home onNavigate={handleNavigate} />;
       case 'challenges':
         return <Challenges />;
+      case 'following':
+        return <Following onNavigate={handleNavigate} />;
       case 'artist':
         return <ArtistProfile artistId={selectedArtistId} />;
       default:

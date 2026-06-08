@@ -50,7 +50,7 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private void seedAlbums() {
-        albumRepository.deleteAll();
+        if (albumRepository.count() > 0) return;
         createAlbum("Folklore", "Folk Pop", "https://assets.b9.com.br/wp-content/uploads/2020/07/Taylor-Swift-Folklore-capa.jpg");
         createAlbum("Mayhem", "Dark Pop", "https://upload.wikimedia.org/wikipedia/pt/0/0a/Lady_Gaga_-_Mayhem.jpg");
         createAlbum("In Rainbows", "Alternative Rock", "https://upload.wikimedia.org/wikipedia/pt/9/96/Radiohead_-_In_Rainbows.jpg");
@@ -58,7 +58,7 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private void seedArtistsAndSongs() {
-        artistRepository.deleteAll();
+        if (artistRepository.count() > 0) return;
 
         Artist taylor = new Artist();
         taylor.setName("Taylor Swift");
